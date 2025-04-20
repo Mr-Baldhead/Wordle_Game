@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="/assets/templates.css">
+    
+</head>
+<body>
+    <div class="error-container">
+        <h1>Fel uppstod</h1>
+        <p><%= error %></p>
+        <% if (message) { %>
+            <p><%= message %></p>
+        <% } %>
+        <a href="/" class="back-link">Tillbaka till startsidan</a>
+    </div>
+</body>
+</html>

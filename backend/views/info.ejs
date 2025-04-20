@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Om Wordle-projektet</title>
+    <link rel="stylesheet" href="/assets/templates.css">
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Om Wordle-projektet</h1>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Till spelet</a>
+                <a href="/highscores" class="nav-link">Highscores</a>
+            </div>
+        </header>
+        
+        <main>
+            <section>
+                <h2>Projektbeskrivning</h2>
+                <p>
+                    Detta projekt är en implementation av det populära ordspelet Wordle. 
+                    Spelet går ut på att gissa ett ord på ett visst antal bokstäver inom sex försök. 
+                    Efter varje gissning får spelaren feedback om vilka bokstäver som är korrekta och på rätt plats, 
+                    vilka som är korrekta men på fel plats, och vilka som inte finns i ordet.
+                </p>
+                <p>
+                    Projektet utvecklades som en del av en JavaScript-kurs för att demonstrera 
+                    kunskaper inom fullstack-utveckling med React, Express och MongoDB.
+                </p>
+            </section>
+            
+            <section>
+                <h2>Funktioner</h2>
+                <ul class="feature-list">
+                    <li>Spela med ord av olika längd (4-8 bokstäver)</li>
+                    <li>Valmöjlighet att tillåta eller förbjuda dubbla bokstäver</li>
+                    <li>Färgkodad feedback på gissningar</li>
+                    <li>Tidtagning för att mäta hur snabbt spelaren löser ordet</li>
+                    <li>Highscore-system som sparar de bästa resultaten i en databas</li>
+                    <li>Responsiv design som fungerar på både mobila enheter och datorer</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>Teknisk stack</h2>
+                <p>Projektet använder följande teknologier:</p>
+                <div class="tech-stack">
+                    <span class="tech">React</span>
+                    <span class="tech">Node.js</span>
+                    <span class="tech">Express</span>
+                    <span class="tech">MongoDB</span>
+                    <span class="tech">Mongoose</span>
+                    <span class="tech">Vite</span>
+                    <span class="tech">EJS</span>
+                </div>
+                <p>Arkitekturen är byggd enligt följande principer:</p>
+                <ul>
+                    <li>Frontend använder React för client-side rendering av spelet</li>
+                    <li>Backend använder Express för att skapa API:er och server-side rendering av specifika sidor</li>
+                    <li>Highscores-data lagras i en MongoDB-databas via Mongoose ORM</li>
+                    <li>Statiska sidor som highscores och information renderas server-side med EJS för förbättrad prestanda</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>Hur man spelar</h2>
+                <p>
+                    1. Välj ordlängd (4-8 bokstäver) och om du vill tillåta dubbla bokstäver.<br>
+                    2. Klicka på "Starta spel".<br>
+                    3. Gissa ordet genom att skriva in ditt förslag och trycka på Enter eller klicka på "Gissa".<br>
+                    4. Efter varje gissning får du färgkodad feedback:<br>
+                </p>
+                <div class="code-block">
+                    🟩 - Bokstaven är korrekt och på rätt plats<br>
+                    🟨 - Bokstaven finns i ordet men på fel plats<br>
+                    ⬜ - Bokstaven finns inte i ordet
+                </div>
+                <p>
+                    5. Du har maximalt sex försök på dig att gissa ordet.<br>
+                    6. Om du lyckas kan du skicka in ditt resultat till highscore-listan!
+                </p>
+            </section>
+            
+            <section>
+                <h2>Om utvecklaren</h2>
+                <p>
+                    Detta projekt utvecklades av <strong>Jorlindstrom</strong> den 17 april 2025 
+                    som en del av en kurs i fullstack JavaScript-utveckling.
+                </p>
+                <p>
+                    Koden är öppen källkod och kan användas som referens för andra 
+                    som vill lära sig mer om webbutveckling med JavaScript.
+                </p>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Wordle Game | Utvecklad av Jörgen Lindström</p>
+        </footer>
+    </div>
+</body>
+</html>

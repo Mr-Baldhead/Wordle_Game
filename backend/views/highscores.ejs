@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/assets/templates.css">
+    
+</head>
+<body>
+    <header>
+        <h1><%= title %></h1>
+        <a href="/" class="back-link">Tillbaka till spelet</a>
+    </header>
+    
+    <main>
+        <% if (highscores && highscores.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plats</th>
+                        <th>Namn</th>
+                        <th>Tid</th>
+                        <th>Gissningar</th>
+                        <th>Längd</th>
+                        <th>Dubbletter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% highscores.forEach((score, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= score.name %></td>
+                            <td><%= score.timeFormatted %></td>
+                            <td><%= score.guesses %></td>
+                            <td><%= score.letters %> bokstäver</td>
+                            <td><%= score.duplicates ? 'Ja' : 'Nej' %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="no-results">
+                <p>Inga highscores ännu. Bli den första att spela!</p>
+            </div>
+        <% } %>
+    </main>
+    
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Wordle-like Game | Datum: <%= currentDate %></p>
+    </footer>
+</body>
+</html>

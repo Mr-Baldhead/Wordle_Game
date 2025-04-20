@@ -1,0 +1,237 @@
+.App {
+  text-align: center;
+}
+
+input[type="text"] {
+  margin: 10px;
+}
+
+.game-input input {
+  padding: 15px 20px !important;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 2px solid #3498db;
+  width: calc(30% - 120px);
+  margin: 10px 10px 10px 0;
+  text-align: center;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.game-input input:focus {
+  border-color: #2980b9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+}
+
+/* Förbättrad styling för gissningsknappen */
+.game-input button {
+  padding: 15px 20px !important;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.game-input button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.game-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+
+@media (max-width: 600px) {
+  .game-input {
+    flex-direction: column;
+  }
+  
+  .game-input input {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .game-input button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.letter {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  margin: 2px;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+}
+
+.misplaced {
+  background-color: goldenrod;
+  color: white;
+}
+
+.incorrect {
+  background-color: darkgray;
+  color: white;
+}
+
+.warning {
+  color: red;
+}
+
+
+.game-over {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.winner h2 {
+  color: #2ecc71;
+}
+
+.loser p {
+  color: #e74c3c;
+  font-size: 18px;
+}
+
+.highscore-form {
+  margin-top: 20px;
+}
+
+.highscore-form input {
+  padding: 8px 12px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.highscore-form button, .score-submitted button, .new-game-btn {
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.highscore-form button:hover, .score-submitted button:hover {
+  background-color: #27ae60;
+}
+
+.error {
+  color: #e74c3c;
+  margin-top: 10px;
+}
+
+.score-submitted {
+  margin-top: 20px;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.new-game-btn {
+  margin-top: 20px;
+  background-color: #3498db;
+}
+
+.new-game-btn:hover {
+  background-color: #2980b9;
+}
+
+/* info-länken */
+.info-link {
+  background-color: #9b59b6;
+}
+
+.info-link:hover {
+  background-color: #8e44ad;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 8px 16px;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.game-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.navigation-button {
+  display: inline-block !important;
+  padding: 8px 16px !important;
+  color: white !important;
+  text-decoration: none !important;
+  border-radius: 4px !important;
+  font-weight: bold !important;
+  transition: background-color 0.3s !important;
+  text-align: center !important;
+}
+
+.highscore-button {
+  background-color: #3498db !important;
+}
+
+.highscore-button:hover {
+  background-color: #2980b9 !important;
+}
+
+.info-button {
+  background-color: #9b59b6 !important;
+}
+
+.info-button:hover {
+  background-color: #8e44ad !important;
+}
