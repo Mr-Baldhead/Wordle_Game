@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Settings from "./components/Settings";
-import { wordle } from "./logic/wordle";
-import { getRandomWord, saveHighscore } from "./services/wordService";
+import { startGame, makeGuess, endGame, saveHighscore } from "./services/wordService";
 import "./App.css";
 
 function App() {
   const [wordLength, setWordLength] = useState(5);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
-  const [currentWord, setCurrentWord] = useState(null);
+  const [sessionId, setSessionId] = useState(null); // Nytt: session-ID för backend-spellogik
   const [guesses, setGuesses] = useState([]);
   const [input, setInput] = useState("");
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [warning, setWarning] = useState("");
-  const [startTime, setStartTime] = useState(null);
   const [timeTaken, setTimeTaken] = useState(null);
   const [showSettings, setShowSettings] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -21,9 +19,10 @@ function App() {
   const [submittingScore, setSubmittingScore] = useState(false);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const [scoreError, setScoreError] = useState(null);
+  const [currentWord, setCurrentWord] = useState(null); // Behövs bara för att visa ordet när spelet är slut
 
-  // Asynkron startGame-funktion
-  const startGame = async () => {
+  // Asynkron startGame-funktion (uppdaterad för backend-logik)
+  const handleStartGame = async () => {
     setLoading(true);
     setWarning("");
 
@@ -32,20 +31,21 @@ function App() {
         wordLength,
         allowDuplicates,
       });
-      const result = await getRandomWord(wordLength, allowDuplicates);
+      
+      const result = await startGame(wordLength, allowDuplicates);
 
       if (result.error) {
         console.error("Fel vid start av spel:", result.error);
         setWarning(result.error);
       } else {
-        console.log("Spel startat med ord:", result.word);
-        setCurrentWord(result.word);
+        console.log("Spel startat med session:", result.sessionId);
+        setSessionId(result.sessionId);
         setGuesses([]);
         setInput("");
         setGameOver(false);
         setWon(false);
-        setStartTime(Date.now());
         setShowSettings(false); // Dölj inställningar och visa spelet
+        setCurrentWord(null); // Rensar tidigare ord
       }
     } catch (error) {
       console.error("Oväntat fel vid start av spel:", error);
@@ -55,49 +55,10 @@ function App() {
     }
   };
 
-  // Hämta ett testord när inställningarna ändras (i inställningsvyn)
-  useEffect(() => {
-    if (showSettings) {
-      const fetchWord = async () => {
-        try {
-          console.log("Förhandsgranskar ord med inställningar:", {
-            wordLength,
-            allowDuplicates,
-          });
-          const result = await getRandomWord(wordLength, allowDuplicates);
-
-          if (result.error) {
-            console.warn("Kunde inte förhandsgranska ord:", result.error);
-            setWarning(result.error);
-          } else {
-            console.log("Förhandsgranskade ordet:", result.word);
-            setCurrentWord(result.word);
-            setWarning("");
-          }
-        } catch (error) {
-          console.error("Fel vid förhandsgranskning av ord:", error);
-          setWarning(
-            "Fel vid hämtning av ord: " + (error.message || "Okänt fel")
-          );
-        }
-      };
-
-      fetchWord();
-    }
-  }, [wordLength, allowDuplicates, showSettings]);
-
-  // Beräkna tid när spelet är över
-  useEffect(() => {
-    if (gameOver && startTime) {
-      const endTime = Date.now();
-      setTimeTaken((endTime - startTime) / 1000);
-    }
-  }, [gameOver, startTime]);
-
-  // Hantera gissning
-  const handleGuess = () => {
-    if (!currentWord) {
-      setWarning("Inget ord har hämtats från servern.");
+  // Hantera gissning (uppdaterad för backend-logik)
+  const handleGuess = async () => {
+    if (!sessionId) {
+      setWarning("Ingen aktiv spelsession.");
       return;
     }
 
@@ -109,16 +70,56 @@ function App() {
     if (gameOver) return;
 
     setWarning("");
-    const feedback = wordle(input, currentWord);
-    setGuesses([...guesses, { guess: input, feedback }]);
-    setInput("");
+    
+    try {
+      // Skicka gissningen till backend
+      const result = await makeGuess(sessionId, input);
+      
+      if (result.error) {
+        setWarning(result.error);
+        return;
+      }
+      
+      // Lägg till gissningen med feedback
+      setGuesses([...guesses, { guess: input, feedback: result.feedback }]);
+      setInput("");
+      
+      // Kontrollera om spelet är klart
+      if (result.gameOver) {
+        setGameOver(true);
+        setWon(result.won);
+        setTimeTaken(result.timeTaken);
+        
+        // Om spelet är slut, spara ordet så vi kan visa det
+        if (result.word) {
+          setCurrentWord(result.word);
+        }
+      }
+    } catch (error) {
+      console.error("Fel vid gissning:", error);
+      setWarning("Kunde inte hantera gissningen: " + (error.message || "Okänt fel"));
+    }
+  };
 
-    if (input.toLowerCase() === currentWord.toLowerCase()) {
-      setGameOver(true);
-      setWon(true);
-    } else if (guesses.length >= 5) {
+  // Ge upp spelet
+  const handleGiveUp = async () => {
+    if (!sessionId) return;
+    
+    try {
+      const result = await endGame(sessionId);
+      
+      if (result.error) {
+        setWarning(result.error);
+        return;
+      }
+      
       setGameOver(true);
       setWon(false);
+      setTimeTaken(result.timeTaken);
+      setCurrentWord(result.word);
+    } catch (error) {
+      console.error("Fel vid avslut av spel:", error);
+      setWarning("Kunde inte avsluta spelet: " + (error.message || "Okänt fel"));
     }
   };
 
@@ -163,7 +164,7 @@ function App() {
     setPlayerName("");
     setScoreSubmitted(false);
     setScoreError(null);
-    startGame();
+    handleStartGame();
   };
 
   // Formatera tid till läsbart format
@@ -181,13 +182,13 @@ function App() {
         <h1>Wordle-like Game</h1>
         <div className='navigation-buttons'>
           <a
-            href='http://localhost:5080/highscores'
+            href="http://localhost:5080/highscores"
             className='navigation-button highscore-button'
           >
             Highscores
           </a>
           <a
-            href='http://localhost:5080/info'
+            href="http://localhost:5080/info"
             className='navigation-button info-button'
           >
             Om projektet
@@ -201,7 +202,7 @@ function App() {
           setWordLength={setWordLength}
           allowDuplicates={allowDuplicates}
           setAllowDuplicates={setAllowDuplicates}
-          startGame={startGame}
+          startGame={handleStartGame}
           loading={loading}
           warning={warning}
         />
@@ -220,6 +221,7 @@ function App() {
                 autoFocus
               />
               <button onClick={handleGuess}>Gissa</button>
+              <button onClick={handleGiveUp} className="give-up-btn">Ge upp</button>
             </div>
           ) : null}
 
@@ -264,7 +266,6 @@ function App() {
                   ) : (
                     <div className='score-submitted'>
                       <p>Din poäng har sparats!</p>
-                      {/* Länk till server-side renderad highscore-sida */}
                       <a
                         href='/highscores'
                         className='highscore-link'
@@ -282,7 +283,6 @@ function App() {
                     <strong>{currentWord}</strong>
                   </p>
                   <button onClick={handleRestart}>Spela igen</button>
-                  {/* Länk till server-side renderad highscore-sida */}
                   <a
                     href='/highscores'
                     className='highscore-link'
@@ -302,7 +302,6 @@ function App() {
         </div>
       )}
 
-      {/* Footer */}
       <footer className='game-footer'>
         <p>&copy; 2025 Wordle Game | Utvecklad av Jörgen Lindström</p>
       </footer>

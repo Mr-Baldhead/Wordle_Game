@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs/promises";
 import mongoose from "mongoose";
 import { selectWord } from './logic/selectWord.js';
+import { gameManager } from './logic/gameManager.js';
 import { Highscore } from './src/models.js';
 
 const app = express();
@@ -59,6 +60,78 @@ app.get('/api/random-word', async (req, res) => {
   } catch (error) {
     console.error('Fel vid hantering av förfrågan:', error);
     res.status(500).json({ error: 'Något gick fel på servern' });
+  }
+});
+
+// Starta ett nytt spel
+app.post('/api/game/start', async (req, res) => {
+  try {
+    const { length = 5, allowDuplicates = false } = req.body;
+    
+    // Använd din befintliga logik för att välja ett ord
+    const words = await getWordsFromFile();
+    const result = selectWord(words, parseInt(length), allowDuplicates === true);
+    
+    if (result.error) {
+      return res.status(404).json({ error: result.error });
+    }
+    
+    // Skapa en session med det valda ordet
+    const session = gameManager.createSession(result.word);
+    
+    // Returnera sessionId och ordlängd till klienten (INTE själva ordet)
+    res.json({
+      sessionId: session.sessionId,
+      wordLength: session.wordLength
+    });
+  } catch (error) {
+    console.error('Fel vid start av spel:', error);
+    res.status(500).json({ error: 'Kunde inte starta spelet' });
+  }
+});
+
+// Hantera en gissning
+app.post('/api/game/guess', (req, res) => {
+  try {
+    const { sessionId, guess } = req.body;
+    
+    if (!sessionId || !guess) {
+      return res.status(400).json({ error: 'Både sessionId och en gissning krävs' });
+    }
+    
+    // Använd gameManager för att utvärdera gissningen
+    const result = gameManager.makeGuess(sessionId, guess.toLowerCase());
+    
+    if (result.error) {
+      return res.status(400).json({ error: result.error });
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Fel vid hantering av gissning:', error);
+    res.status(500).json({ error: 'Kunde inte hantera gissningen' });
+  }
+});
+
+// Ge upp spelet
+app.post('/api/game/end', (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'SessionId krävs' });
+    }
+    
+    const result = gameManager.endGame(sessionId);
+    
+    if (result.error) {
+      return res.status(400).json({ error: result.error });
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Fel vid avslut av spel:', error);
+    res.status(500).json({ error: 'Kunde inte avsluta spelet' });
   }
 });
 
