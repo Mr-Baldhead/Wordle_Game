@@ -77,7 +77,7 @@ app.post('/api/game/start', async (req, res) => {
     }
     
     // Skapa en session med det valda ordet
-    const session = gameManager.createSession(result.word);
+    const session = gameManager.createSession(result.word, allowDuplicates);
     
     // Returnera sessionId och ordlängd till klienten (INTE själva ordet)
     res.json({
@@ -182,28 +182,94 @@ app.post('/api/highscores', async (req, res) => {
   }
 });
 
-// API-endpoint för att hämta highscores som JSON
+// API-endpoint för att hämta filtrerade highscores som JSON
 app.get('/api/highscores', async (req, res) => {
   try {
-    const highscores = await Highscore.find()
-      .sort({ guesses: 1, timeTaken: 1 })
-      .limit(20);
+    // Hämta filter-parametrar från query
+    const { letters, duplicates, page = 1, limit = 20 } = req.query;
     
-    console.log('Hämtade highscores:', highscores.length);
-    res.json({ highscores });
+    // Bygg query-objektet för filtrering
+    const query = {};
+    
+    // Lägg till filter om de finns
+    if (letters) {
+      query.letters = parseInt(letters);
+    }
+    
+    if (duplicates !== undefined) {
+      query.duplicates = duplicates === 'true';
+    }
+    
+    console.log('Använder filter för highscores:', query);
+    
+    // Beräkna skip för pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Hämta highscores från databasen med filter
+    const highscores = await Highscore.find(query)
+      .sort({ guesses: 1, timeTaken: 1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+    
+    // Räkna totala antalet för pagination
+    const total = await Highscore.countDocuments(query);
+    
+    console.log(`Hämtade ${highscores.length} highscores av totalt ${total} med filter`);
+    
+    res.json({
+      highscores,
+      pagination: {
+        page: parseInt(page),
+        pages: Math.ceil(total / parseInt(limit)),
+        total
+      }
+    });
   } catch (error) {
     console.error('Fel vid hämtning av highscores:', error);
     res.status(500).json({ error: 'Kunde inte hämta highscores' });
   }
 });
 
-// Server-side renderad highscore-sida
+// Server-side renderad highscore-sida med filtrering
 app.get('/highscores', async (req, res) => {
   try {
-    // Hämta data från databasen
-    const highscores = await Highscore.find()
+    // Hämta filter-parametrar från query
+    const { letters, duplicates, page = 1 } = req.query;
+    const perPage = 20;
+    
+    // Bygg query-objektet för filtrering
+    const query = {};
+    
+    // Lägg till filter om de finns
+    if (letters) {
+      query.letters = parseInt(letters);
+    }
+    
+    if (duplicates !== undefined) {
+      query.duplicates = duplicates === 'true';
+    }
+    
+    console.log('Använder filter för highscores-sidan:', query);
+    
+    // Beräkna skip för pagination
+    const skip = (parseInt(page) - 1) * perPage;
+    
+    // Hämta highscores från databasen med filter
+    const highscores = await Highscore.find(query)
       .sort({ guesses: 1, timeTaken: 1 })
-      .limit(20);
+      .skip(skip)
+      .limit(perPage);
+    
+    // Räkna totala antalet för pagination
+    const total = await Highscore.countDocuments(query);
+    
+    // Hämta alla unika ordlängder i databasen för filter-dropdown
+    const distinctLengths = await Highscore.distinct('letters');
+    distinctLengths.sort((a, b) => a - b);
+    
+    // Om inga längder i databasen, använd standardlängder
+    const availableLengths = distinctLengths.length > 0 ? 
+      distinctLengths : [4, 5, 6, 7, 8];
     
     // Hantera formatering på server-sidan
     const formattedHighscores = highscores.map(score => {
@@ -217,11 +283,23 @@ app.get('/highscores', async (req, res) => {
       };
     });
     
-    // Rendera EJS-templaten med data
+    // Rendera EJS-templaten med data och filter-variabler
     res.render('highscores', { 
       highscores: formattedHighscores,
       title: 'Wordle Highscores',
-      currentDate: new Date().toISOString().slice(0, 10)
+      currentDate: new Date().toISOString().slice(0, 10),
+      currentFilters: {
+        letters: letters ? parseInt(letters) : null,
+        duplicates: duplicates !== undefined ? (duplicates === 'true') : null
+      },
+      filterOptions: {
+        lengths: availableLengths
+      },
+      pagination: {
+        page: parseInt(page),
+        pages: Math.ceil(total / perPage),
+        total
+      }
     });
   } catch (error) {
     console.error('Fel vid server-rendering av highscores:', error);

@@ -1,53 +1,74 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/assets/templates.css">
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/assets/templates.css">
 </head>
 <body>
-    <header>
-        <h1><%= title %></h1>
-        <a href="http://localhost:5173/" class="back-link">Tillbaka till spelet</a>
-    </header>
-    
-    <main>
-        <% if (highscores && highscores.length > 0) { %>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Plats</th>
-                        <th>Namn</th>
-                        <th>Tid</th>
-                        <th>Gissningar</th>
-                        <th>Längd</th>
-                        <th>Dubbletter</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% highscores.forEach((score, index) => { %>
-                        <tr>
-                            <td><%= index + 1 %></td>
-                            <td><%= score.name %></td>
-                            <td><%= score.timeFormatted %></td>
-                            <td><%= score.guesses %></td>
-                            <td><%= score.letters %> bokstäver</td>
-                            <td><%= score.duplicates ? 'Ja' : 'Nej' %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        <% } else { %>
-            <div class="no-results">
-                <p>Inga highscores ännu. Bli den första att spela!</p>
-            </div>
+  <header>
+    <h1><%= title %></h1>
+    <a href="/" class="back-link">Tillbaka till spelet</a>
+  </header>
+
+  <main>
+    <div class="filters">
+      <form action="/highscores" method="get" class="filter-form">
+        <label for="letters">Ordlängd:</label>
+        <select id="letters" name="letters">
+          <option value="">Alla</option>
+          <% filterOptions.lengths.forEach(len => { %>
+            <option value="<%= len %>" <%= currentFilters.letters === len ? 'selected' : '' %>><%= len %></option>
+          <% }) %>
+        </select>
+
+        <label for="duplicates">Dubbletter:</label>
+        <select id="duplicates" name="duplicates">
+          <option value="">Alla</option>
+          <option value="false" <%= currentFilters.duplicates === false ? 'selected' : '' %>>Utan dubbletter</option>
+          <option value="true" <%= currentFilters.duplicates === true ? 'selected' : '' %>>Med dubbletter</option>
+        </select>
+
+        <button type="submit">Filtrera</button>
+        <% if (currentFilters.letters || currentFilters.duplicates !== null) { %>
+          <a href="/highscores" class="clear-filters">Rensa filter</a>
         <% } %>
-    </main>
-    
-    <footer>
-        <p>&copy; <%= new Date().getFullYear() %> Wordle-like Game | Datum: <%= currentDate %></p>
-    </footer>
+      </form>
+    </div>
+
+    <% if (highscores.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Plats</th>
+            <th>Namn</th>
+            <th>Tid</th>
+            <th>Gissningar</th>
+            <th>Ordlängd</th>
+            <th>Dubbletter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% highscores.forEach((highscore, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= highscore.name %></td>
+              <td><%= highscore.timeFormatted %></td>
+              <td><%= highscore.guesses %></td>
+              <td><%= highscore.letters %></td>
+              <td><%= highscore.duplicates ? 'Ja' : 'Nej' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>Inga highscores hittades för de valda filtren.</p>
+    <% } %>
+  </main>
+
+  <footer>
+    <p>&copy; <%= new Date().getFullYear() %> Wordle-like Game</p>
+  </footer>
 </body>
 </html>

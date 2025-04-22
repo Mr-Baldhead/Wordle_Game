@@ -12,7 +12,7 @@ input[type="text"] {
   border-radius: 6px;
   border: 2px solid #3498db;
   width: calc(30% - 120px);
-  margin: 10px 10px 10px 0;
+  margin: 10px 0 10px 0;
   text-align: center;
   transition: border-color 0.3s, box-shadow 0.3s;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -36,6 +36,7 @@ input[type="text"] {
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-left: 10px;
 }
 
 .game-input button:hover {

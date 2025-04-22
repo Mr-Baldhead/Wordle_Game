@@ -283,12 +283,6 @@ function App() {
                     <strong>{currentWord}</strong>
                   </p>
                   <button onClick={handleRestart}>Spela igen</button>
-                  <a
-                    href='/highscores'
-                    className='highscore-link'
-                  >
-                    Visa highscores
-                  </a>
                 </div>
               )}
 
