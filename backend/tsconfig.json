@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",                  // Använd CommonJS-moduler (standard för Node.js)
+    "target": "ES6",                       // Kompilera till ES6 JavaScript
+    "outDir": "./dist",                    // Output-mappen för kompilat JavaScript
+    "rootDir": "./src",                    // Källkodens rotmapp
+    "strict": true,                        // Aktivera strikt typkontroll
+    "esModuleInterop": true,               // Gör det enklare att importera moduler
+    "moduleResolution": "node",            // Node.js-modulupplösning
+    "skipLibCheck": true                   // Hoppa över typkontroller av bibliotek
+  },
+  "include": ["src/**/*"],                 // Inkludera alla TypeScript-filer i `src`-mappen
+  "exclude": ["node_modules"]              // Exkludera `node_modules`
+}

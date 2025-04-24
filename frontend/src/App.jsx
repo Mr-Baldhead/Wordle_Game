@@ -182,13 +182,13 @@ function App() {
         <h1>Wordle-like Game</h1>
         <div className='navigation-buttons'>
           <a
-            href="http://localhost:5080/highscores"
+            href="/highscores"
             className='navigation-button highscore-button'
           >
             Highscores
           </a>
           <a
-            href="http://localhost:5080/info"
+            href="/info"
             className='navigation-button info-button'
           >
             Om projektet

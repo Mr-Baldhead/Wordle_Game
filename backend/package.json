@@ -2,19 +2,23 @@
     "name": "wordle-backend",
     "version": "1.0.0",
     "description": "Node.js Express server for random word fetching",
-    "main": "server.js",
+    "main": "dist/server.js",
     "type": "module",
     "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js",
-      "build": "echo 'Backend build process complete'"
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "dev": "nodemon --watch src --exec \"npx tsc && node dist/server.js\""
     },
     "dependencies": {
-      "ejs": "^3.1.10",
-      "express": "^4.18.2",
-      "mongoose": "^8.13.2"
+        "ejs": "^3.1.10",
+        "express": "^4.21.2",
+        "mongoose": "^8.13.2",
+        "typescript": "^5.8.3"
     },
     "devDependencies": {
-      "nodemon": "^3.1.9"
+        "@types/express": "^5.0.1",
+        "@types/node": "^22.14.1",
+        "nodemon": "^3.1.9",
+        "ts-node": "^10.9.2"
     }
-  }
+}
