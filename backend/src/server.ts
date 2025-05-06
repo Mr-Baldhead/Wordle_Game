@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 import fs from "fs/promises";
 import mongoose from "mongoose";
-import selectWord from './logic/selectWord.js';
-import { gameManager } from './logic/gameManager.js';
-import { Highscore, IHighscore } from './models.js';
+import selectWord from './logic/selectWord';
+import { gameManager } from './logic/gameManager';
+import { Highscore, IHighscore } from './models';
 
 const app = express();
 const PORT = 5080;
@@ -198,13 +198,13 @@ app.get('/highscores', async (req, res) => {
 
     // Definiera filteralternativ
     const filterOptions = {
-      lengths: [4, 5, 6, 7, 8], // Exempelvärden
+      lengths: [4, 5, 6, 7, 8],
     };
 
     // Nuvarande filter
     const currentFilters = {
-      letters: req.query.letters || '', // Skicka valt filter tillbaka till formuläret
-      duplicates: duplicatesFilter,    // Skicka valt dubbletter-filter tillbaka
+      letters: typeof req.query.letters === 'string' ? req.query.letters : '', // Skicka valt filter tillbaka till formuläret
+      duplicates: typeof req.query.duplicates === 'string' ? req.query.duplicates : '',    // Skicka valt dubbletter-filter tillbaka
     };
 
     // Rendera EJS-templaten med data
@@ -238,7 +238,20 @@ async function getWordsFromFile(): Promise<string[]> {
   }
 }
 
+app.get('/', async (req, res) => {
+  const htmlText = await fs.readFile('../frontend/dist/index.html', 'utf8');
+  res.send(htmlText.toString());
+});
+
+app.use('/assets', express.static('../frontend/dist/assets')); // Statiska filer för frontend
+
 // Starta servern
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server körs på http://localhost:${PORT}`);
 });
+
+afterAll(() => {
+  server.close();
+});
+
+export { app }; // Exportera appen för testning

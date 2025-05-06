@@ -1,4 +1,4 @@
-import { wordle } from './wordle.js';
+import { wordle } from './wordle';
 
 // Typdefinitioner för sessionens struktur
 interface Guess {

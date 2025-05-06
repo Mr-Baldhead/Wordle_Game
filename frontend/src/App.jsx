@@ -159,13 +159,18 @@ function App() {
     setSubmittingScore(false);
   };
 
-  // Hantera återställning
-  const handleRestart = () => {
-    setPlayerName("");
-    setScoreSubmitted(false);
-    setScoreError(null);
-    handleStartGame();
-  };
+// Hantera återställning
+const handleRestart = () => {
+  setPlayerName("");
+  setScoreSubmitted(false);
+  setScoreError(null);
+  setGuesses([]);
+  setInput("");
+  setGameOver(false);
+  setWon(false);
+  setShowSettings(true);
+};
+
 
   // Formatera tid till läsbart format
   const formatTime = (timeInSeconds) => {
@@ -282,13 +287,12 @@ function App() {
                     Game Over! Det rätta ordet var{" "}
                     <strong>{currentWord}</strong>
                   </p>
-                  <button onClick={handleRestart}>Spela igen</button>
                 </div>
               )}
 
               {(scoreSubmitted || !won) && (
                 <button onClick={handleRestart} className='new-game-btn'>
-                  Nytt spel
+                  Spela igen
                 </button>
               )}
             </div>

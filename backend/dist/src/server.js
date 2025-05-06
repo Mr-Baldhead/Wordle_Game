@@ -10,15 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import express from "express";
 import fs from "fs/promises";
 import mongoose from "mongoose";
-import selectWord from './logic/selectWord.js';
-import { gameManager } from './logic/gameManager.js';
-import { Highscore } from './models.js';
+import selectWord from './logic/selectWord';
+import { gameManager } from './logic/gameManager';
+import { Highscore } from './models';
 const app = express();
 const PORT = 5080;
-// Middleware och routes
-app.get('/api/random-word', (req, res) => {
-    res.status(200).json({ data: 'mocked-word' });
-});
 // Middleware för att parsa JSON
 app.use(express.json());
 // Konfigurera EJS som view engine med relativa sökvägar
@@ -182,12 +178,12 @@ app.get('/highscores', (req, res) => __awaiter(void 0, void 0, void 0, function*
             .limit(20);
         // Definiera filteralternativ
         const filterOptions = {
-            lengths: [4, 5, 6, 7, 8], // Exempelvärden
+            lengths: [4, 5, 6, 7, 8],
         };
         // Nuvarande filter
         const currentFilters = {
-            letters: req.query.letters || '', // Skicka valt filter tillbaka till formuläret
-            duplicates: duplicatesFilter, // Skicka valt dubbletter-filter tillbaka
+            letters: typeof req.query.letters === 'string' ? req.query.letters : '', // Skicka valt filter tillbaka till formuläret
+            duplicates: typeof req.query.duplicates === 'string' ? req.query.duplicates : '', // Skicka valt dubbletter-filter tillbaka
         };
         // Rendera EJS-templaten med data
         res.render('highscores', {
@@ -227,7 +223,10 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.use('/assets', express.static('../frontend/dist/assets')); // Statiska filer för frontend
 // Starta servern
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server körs på http://localhost:${PORT}`);
+});
+afterAll(() => {
+    server.close();
 });
 export { app }; // Exportera appen för testning
