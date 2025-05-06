@@ -172,7 +172,14 @@ async function getWordsFromFile() {
   }
 }
 
-// Starta servern
-app.listen(PORT, () => {
+app.get('/', async (req, res) => {
+  const htmlText = await fs.readFile('../frontend/dist/index.html', 'utf8');
+  res.send(htmlText.toString());
+});
+
+app.use('/assets', express.static('../frontend/dist/assets')); // Statiska filer för frontend
+
+
+const server = app.listen(PORT, () => {
   console.log(`Server körs på http://localhost:${PORT}`);
 });

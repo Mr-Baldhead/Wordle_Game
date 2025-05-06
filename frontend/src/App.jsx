@@ -164,6 +164,11 @@ function App() {
     setScoreSubmitted(false);
     setScoreError(null);
     startGame();
+    setGuesses([]);
+    setInput("");
+    setGameOver(false);
+    setWon(false);
+    setShowSettings(false);
   };
 
   // Formatera tid till läsbart format
@@ -182,8 +187,7 @@ function App() {
         <div className='navigation-buttons'>
           <a
             href='/highscores'
-            className='navigation-button highscore-button'
-          >
+            className='navigation-button highscore-button'>
             Highscores
           </a>
           <a
@@ -264,7 +268,6 @@ function App() {
                   ) : (
                     <div className='score-submitted'>
                       <p>Din poäng har sparats!</p>
-                      {/* Länk till server-side renderad highscore-sida */}
                       <a
                         href='/highscores'
                         className='highscore-link'
@@ -281,14 +284,6 @@ function App() {
                     Game Over! Det rätta ordet var{" "}
                     <strong>{currentWord}</strong>
                   </p>
-                  <button onClick={handleRestart}>Spela igen</button>
-                  {/* Länk till server-side renderad highscore-sida */}
-                  <a
-                    href='/highscores'
-                    className='highscore-link'
-                  >
-                    Visa highscores
-                  </a>
                 </div>
               )}
 
