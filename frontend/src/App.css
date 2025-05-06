@@ -81,7 +81,7 @@ input[type="text"] {
 }
 
 .correct {
-  background-color: green;
+  background-color:#008000;
   color: white;
 }
 
@@ -109,7 +109,7 @@ input[type="text"] {
 }
 
 .winner h2 {
-  color: #2ecc71;
+  color: #008000;
 }
 
 .loser p {
@@ -131,7 +131,7 @@ input[type="text"] {
 
 .highscore-form button, .score-submitted button, .new-game-btn {
   padding: 8px 16px;
-  background-color: #2ecc71;
+  background-color: #008000;
   color: white;
   border: none;
   border-radius: 4px;
@@ -141,7 +141,7 @@ input[type="text"] {
 }
 
 .highscore-form button:hover, .score-submitted button:hover {
-  background-color: #27ae60;
+  background-color: #008000;
 }
 
 .error {
@@ -151,7 +151,7 @@ input[type="text"] {
 
 .score-submitted {
   margin-top: 20px;
-  color: #27ae60;
+  color: #008000;
   font-weight: bold;
 }
 
