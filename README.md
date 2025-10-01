@@ -10,16 +10,16 @@ Funktioner
 - Highscore-system som sparar de bästa resultaten i en databas
 - Responsiv design som fungerar på både mobila enheter och datorer
 
-Teknisk stack - Projektet använder följande teknologier:
-React
-Node.js
-Express
-MongoDB
-Mongoose
-Vite
-EJS
+## Teknisk stack - Projektet använder följande teknologier:
+- React
+- Node.js
+- Express
+- MongoDB
+- Mongoose
+- Vite
+- EJS
 
-Hur man spelar
+## Hur man spelar
 1. Välj ordlängd (4-8 bokstäver) och om du vill tillåta dubbla bokstäver. 2. Klicka på "Starta spel".
 2.  Gissa ordet genom att skriva in ditt förslag och trycka på Enter eller klicka på "Gissa".
 3. Efter varje gissning får du färgkodad feedback:
@@ -28,5 +28,6 @@ Hur man spelar
 ⬜ - Bokstaven finns inte i ordet
 4. Du har maximalt sex försök på dig att gissa ordet.
 5. Om du lyckas kan du skicka in ditt resultat till highscore-listan!
+
 
 
