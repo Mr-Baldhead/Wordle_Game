@@ -29,5 +29,9 @@ Funktioner
 4. Du har maximalt sex försök på dig att gissa ordet.
 5. Om du lyckas kan du skicka in ditt resultat till highscore-listan!
 
+<img width="904" height="739" alt="Skärmavbild 2025-05-04 kl  23 22 21" src="https://github.com/user-attachments/assets/dd341a18-9e57-434f-8edf-89edfe938235" />
+<img width="997" height="344" alt="Skärmavbild 2025-04-24 kl  16 07 44" src="https://github.com/user-attachments/assets/23179953-99a2-4465-b255-5df8a460139c" />
+
+<img width="926" height="894" alt="Skärmavbild 2025-05-06 kl  15 21 24" src="https://github.com/user-attachments/assets/bad7c5bf-5803-4bef-8119-117239a55252" />
 
 
